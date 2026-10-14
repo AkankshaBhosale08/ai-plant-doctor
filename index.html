@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Plant Doctor</title>
+  <meta name="description" content="AI Plant Doctor - AI-based plant disease detection and farmer assistance (Marathi, English, Hindi).">
+  <link rel="icon" href="assets/leaf.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link no-print" href="#analyze" data-i18n="skipLink">Skip to analyzer</a>
+
+  <header class="site-header no-print">
+    <div class="container header-row">
+      <a class="brand" href="#home" aria-label="AI Plant Doctor">
+        <img src="assets/leaf.svg" alt="" width="40" height="40">
+        <span class="brand-text">
+          <strong data-i18n="appTitle">AI Plant Doctor</strong>
+          <small data-i18n="subtitle">AI-Based Plant Disease Detection and Farmer Assistance System</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#home" data-i18n="navHome">Home</a>
+        <a href="#analyze" data-i18n="navAnalyze">Analyze</a>
+        <a href="#crops" data-i18n="navCrops">Supported crops</a>
+        <a href="#about" data-i18n="navAbout">About</a>
+      </nav>
+      <div class="lang-box">
+        <label for="langSelect" data-i18n="langLabel">Language</label>
+        <select id="langSelect">
+          <option value="mr">मराठी</option>
+          <option value="en" selected>English</option>
+          <option value="hi">हिंदी</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero no-print">
+      <div class="container hero-grid">
+        <div>
+          <h1 data-i18n="heroTitle">Check your crop leaf with AI</h1>
+          <p class="lead" data-i18n="heroText"></p>
+          <a class="btn btn-primary btn-lg" href="#analyze" data-i18n="heroBtn">Analyze Leaf</a>
+          <p class="note" data-i18n="heroNote"></p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <img src="assets/leaf.svg" alt="" width="180" height="180">
+        </div>
+      </div>
+    </section>
+
+    <section class="features no-print">
+      <div class="container cards">
+        <article class="card"><h3 data-i18n="f1Title"></h3><p data-i18n="f1Text"></p></article>
+        <article class="card"><h3 data-i18n="f2Title"></h3><p data-i18n="f2Text"></p></article>
+        <article class="card"><h3 data-i18n="f3Title"></h3><p data-i18n="f3Text"></p></article>
+      </div>
+    </section>
+
+    <section id="analyze" class="section">
+      <div class="container">
+        <div class="no-print" id="uploadPanel">
+          <h2 data-i18n="analyzeTitle">Analyze a leaf</h2>
+          <p class="muted" data-i18n="analyzeIntro"></p>
+          <div class="crop-selector">
+  <label for="cropSelect"><strong>तुमचे पीक निवडा / Select your crop:</strong></label>
+  <select id="cropSelect">
+    <option value="">-- पीक निवडा --</option>
+    <option value="Tomato">Tomato (टोमॅटो)</option>
+    <option value="Grape">Grape (द्राक्ष)</option>
+    <option value="Potato">Potato (बटाटा)</option>
+    <option value="Apple">Apple (सफरचंद)</option>
+    <option value="Corn_(maize)">Corn (मका)</option>
+    <option value="Pepper,_bell">Bell Pepper (ढोबळी मिरची)</option>
+    <option value="Peach">Peach</option>
+    <option value="Cherry_(including_sour)">Cherry</option>
+    <option value="Strawberry">Strawberry (स्ट्रॉबेरी)</option>
+    <option value="Orange">Orange (संत्रे)</option>
+    <option value="Soybean">Soybean (सोयाबीन)</option>
+    <option value="Blueberry">Blueberry</option>
+    <option value="Raspberry">Raspberry</option>
+    <option value="Squash">Squash</option>
+  </select>
+</div>
+
+          <div id="modelStatus" class="status status-loading" role="status" aria-live="polite">
+            <span id="modelStatusText"></span>
+            <button type="button" id="retryModelBtn" class="btn btn-small" hidden data-i18n="retryModel">Try again</button>
+          </div>
+
+          <div class="upload-grid">
+            <div>
+              <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-describedby="fileHint">
+                <img id="previewImg" class="preview" alt="" hidden>
+                <div id="dropPrompt">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+                  <p class="drop-text" data-i18n="dropText"></p>
+                  <span class="btn btn-outline" data-i18n="chooseFile">Choose photo</span>
+                </div>
+              </div>
+              <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+              <p id="fileHint" class="hint" data-i18n="fileHint"></p>
+              <div class="btn-row">
+                <button type="button" id="changeBtn" class="btn btn-outline" hidden data-i18n="changeImage">Change photo</button>
+                <button type="button" id="removeBtn" class="btn btn-outline" hidden data-i18n="removeImage">Remove photo</button>
+              </div>
+            </div>
+            <div class="tips card">
+              <h3 data-i18n="tipsTitle">Tips for a good photo</h3>
+              <ul id="tipsList"></ul>
+            </div>
+          </div>
+
+          <div id="message" class="message" role="alert" hidden></div>
+
+          <button type="button" id="analyzeBtn" class="btn btn-primary btn-lg" disabled data-i18n="analyzeBtn">Analyze Leaf</button>
+          <span id="spinner" class="spinner" hidden aria-hidden="true"></span>
+        </div>
+
+        <article id="report" class="report" hidden aria-live="polite">
+          <header class="report-head">
+            <img src="assets/leaf.svg" alt="" width="36" height="36">
+            <div>
+              <h2 data-i18n="reportTitle">Leaf Analysis Report</h2>
+              <p class="muted" id="reportDate"></p>
+            </div>
+          </header>
+          <div id="reportBody"></div>
+          <div class="btn-row no-print">
+            <button type="button" id="anotherBtn" class="btn btn-primary" data-i18n="analyzeAnother">Analyze another leaf</button>
+            <button type="button" id="printBtn" class="btn btn-outline" data-i18n="printReport">Print report</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="crops" class="section alt no-print">
+      <div class="container">
+        <h2 data-i18n="cropsTitle">Supported crops</h2>
+        <p class="muted" data-i18n="cropsText"></p>
+        <ul id="cropList" class="chips"></ul>
+        <details class="classes">
+          <summary data-i18n="classesSummary">Show all disease classes the model knows</summary>
+          <ul id="classList" class="class-list"></ul>
+        </details>
+      </div>
+    </section>
+
+    <section id="about" class="section no-print">
+      <div class="container">
+        <h2 data-i18n="aboutTitle">About and responsible use</h2>
+        <ul id="aboutList" class="about-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer no-print">
+    <div class="container"><p data-i18n="footerText"></p></div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/knowledge.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
